@@ -12,10 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import br.net.codigoninja.radiosnet.dao.RadioDAO;
 import br.net.codigoninja.radiosnet.dto.Radio;
 
 
@@ -60,10 +64,16 @@ public class MainActivity extends AppCompatActivity {
      * @return lista com todos os cursos
      */
     private List<Radio> todosAsRadios() {
+        /*
         return new ArrayList<>(Arrays.asList(
-                new Radio("Radio Mix FM SP", "http://tuneinmix.crossradio.com.br:8008/stream?type=http&amp;nocache=74659"),
-                new Radio("Jovem Pan FM - 100.9 FM", "http://17483.live.streamtheworld.com:3690/JP_SP_FM_SC"),
-                new Radio("Top FM - 104.1", "http://18703.live.streamtheworld.com/TUPIFMAAC_SC")));
+                new Radio(1,"Radio Mix FM SP", "http://tuneinmix.crossradio.com.br:8008/stream?type=http&amp;nocache=74659","SP"),
+                new Radio(2,"Jovem Pan FM - 100.9 FM", "http://17483.live.streamtheworld.com:3690/JP_SP_FM_SC", "SP"),
+                new Radio(3,"Top FM - 104.1", "http://18703.live.streamtheworld.com/TUPIFMAAC_SC", "SP")));
+                */
+        RadioDAO dao = new RadioDAO(this);
+
+        dao.carregaRadios(this);
+        return dao.retornarTodos();
     }
 }
 
