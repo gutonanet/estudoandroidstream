@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -19,19 +21,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import br.net.codigoninja.radiosnet.dao.CidadeDAO;
+import br.net.codigoninja.radiosnet.dao.GeneroDAO;
 import br.net.codigoninja.radiosnet.dao.RadioDAO;
 import br.net.codigoninja.radiosnet.dto.Radio;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private String cidade;
+    private String genero;
+    private String nomeRadio;
+    private  Bundle extras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        obtemExtras();
 
         ListView lista = (ListView) findViewById(R.id.lista);
+
+        FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.myFAB);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FilterActivity.class);
+                startActivity(intent);
+            }
+        });
 
         List<Radio> radios = todosAsRadios();
         ArrayAdapter<Radio> adapter = new ArrayAdapter<Radio>(this, android.R.layout.simple_list_item_1, radios);
@@ -57,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public void obtemExtras(){
+        cidade = null;
+        genero = null;
+        nomeRadio = null;
+        extras = getIntent().getExtras();
+        if(extras!= null){
+            cidade = extras.getString("cidade");
+            genero = extras.getString("genero");
+            nomeRadio = extras.getString("nomeRadio");
+        }
+    }
+
     /**
      * Exemplo qualquer de devolução de uma lista de cursos.
      * Para esse exemplo será considerado um hard coded.
@@ -64,16 +94,19 @@ public class MainActivity extends AppCompatActivity {
      * @return lista com todos os cursos
      */
     private List<Radio> todosAsRadios() {
-        /*
-        return new ArrayList<>(Arrays.asList(
-                new Radio(1,"Radio Mix FM SP", "http://tuneinmix.crossradio.com.br:8008/stream?type=http&amp;nocache=74659","SP"),
-                new Radio(2,"Jovem Pan FM - 100.9 FM", "http://17483.live.streamtheworld.com:3690/JP_SP_FM_SC", "SP"),
-                new Radio(3,"Top FM - 104.1", "http://18703.live.streamtheworld.com/TUPIFMAAC_SC", "SP")));
-                */
+        carregaDados();
         RadioDAO dao = new RadioDAO(this);
+        return dao.retornarDados(cidade, genero, nomeRadio);
+    }
 
-        dao.carregaRadios(this);
-        return dao.retornarTodos();
+    private void carregaDados(){
+        CidadeDAO cidadeDAO = new CidadeDAO(this);
+        cidadeDAO.carregaDados(this);
+        GeneroDAO generoDAO = new GeneroDAO(this);
+        generoDAO.carregaDados(this);
+        RadioDAO dao = new RadioDAO(this);
+        dao.carregaDados(this);
+
     }
 }
 

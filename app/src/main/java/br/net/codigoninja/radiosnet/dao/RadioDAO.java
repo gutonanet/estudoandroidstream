@@ -5,10 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,23 +25,68 @@ public class RadioDAO {
       }
 
 
+    public String[] retornaNomes(String cidade, String genero, String nomeRadio){
+        List<Radio> lista = retornarDados(cidade,genero,nomeRadio);
+        String[] radios = new String[lista.size()];
+        int i = 0;
+        for(Radio r:lista){
+            radios[i] = r.getNome();
+            i++;
+        }
+        return radios;
+    }
 
-    public List<Radio> retornarTodos(){
+
+    public List<Radio> retornarDados(String cidade, String genero, String nomeRadio){
+        String query = " SELECT r.* FROM Radios r ";
+        query += " INNER JOIN Cidades c on (c.ID = r.ID_CIDADE) ";
+        query += " INNER JOIN Generos g on (g.ID = r.ID_GENERO) ";
+        String where = " where 1=1 ";
+        List<String> argumentos = new ArrayList<>();
+        if(cidade!= null && !"".equals(cidade)){
+
+            where += " AND c.NOME = ? AND c.UF = ? ";
+            String[] dados = cidade.split("-");
+            argumentos.add(dados[0].trim());
+            argumentos.add(dados[1].trim());
+        }
+
+        if(genero!= null  && !"".equals(genero)){
+
+            where += " AND g.NOME = ? ";
+            argumentos.add(genero.trim());
+        }
+
+        if(nomeRadio != null && !"".equals(nomeRadio)){
+            where += " AND r.NOME like ? ";
+            argumentos.add("%"+nomeRadio.trim()+"%");
+
+        }
+        String[] args = null;
+        if(!argumentos.isEmpty()){
+            args = new String[argumentos.size()];
+            for(int i = 0; i < argumentos.size(); i++){
+                args[i] = argumentos.get(i);
+            }
+
+        }
+
         List<Radio> radios = new ArrayList<>();
-        Cursor cursor = gw.getDatabase().rawQuery("SELECT * FROM Radios", null);
+        Cursor cursor = gw.getDatabase().rawQuery(query+where, args);
         while(cursor.moveToNext()){
             int id = cursor.getInt(cursor.getColumnIndex("ID"));
-            String nome = cursor.getString(cursor.getColumnIndex("Nome"));
+            String nome = cursor.getString(cursor.getColumnIndex("NOME"));
             String url = cursor.getString(cursor.getColumnIndex("URL"));
-            String uf = cursor.getString(cursor.getColumnIndex("UF"));
+            Integer idCidade = cursor.getInt(cursor.getColumnIndex("ID_CIDADE"));
+            Integer idGereno = cursor.getInt(cursor.getColumnIndex("ID_GENERO"));
 
-            radios.add(new Radio(id, nome, url, uf));
+            radios.add(new Radio(id, nome, url, idCidade, idGereno));
         }
         cursor.close();
         return radios;
     }
 
-    public void carregaRadios(Context cx){
+    public void carregaDados(Context cx){
         Cursor cursor = gw.getDatabase().rawQuery("SELECT count(*) as valor FROM Radios", null);
         int valor = 0;
         if(cursor.moveToNext()){
@@ -56,12 +98,13 @@ public class RadioDAO {
     }
 
 
-    public boolean salvar(Integer id, String nome, String url, String uf){
+    public boolean salvar(Integer id, String nome, String url, Integer idCidade, Integer idGenero){
         ContentValues cv = new ContentValues();
         cv.put("ID", id);
         cv.put("Nome", nome);
         cv.put("Url", url);
-        cv.put("UF", uf);
+        cv.put("ID_CIDADE", idCidade);
+        cv.put("ID_GENERO", idGenero);
 
         return gw.getDatabase().insert(TABLE_RADIOS, null, cv) > 0;
     }
@@ -78,14 +121,15 @@ public class RadioDAO {
         BufferedReader br  = null;
         try {
 
-            br = new BufferedReader(new InputStreamReader(cx.getAssets().open("dados.dat")));
+            br = new BufferedReader(new InputStreamReader(cx.getAssets().open("radios.dat")));
             for (String linha = br.readLine(); linha != null; linha = br.readLine()) {
-                String[] campos = linha.split(";");
+                String[] campos = linha.split("!");
                 Integer id = Integer.valueOf(campos[0]);
                 String nome = campos[1];
                 String url = campos[2];
-                String uf = campos[3];
-                this.salvar(id,nome,url,uf);
+                Integer idCidade = Integer.valueOf(campos[3]);
+                Integer idGenero = Integer.valueOf(campos[4]);
+                this.salvar(id,nome,url,idCidade, idGenero);
             }
         }catch(Exception e ){
             e.printStackTrace();

@@ -12,13 +12,18 @@ public class Radio {
 
     private String url;
 
-    private String uf;
+    private Integer idCidade;
 
-    public Radio(int id, String nome, String url, String uf) {
+    private Integer idGenero;
+
+
+
+    public Radio(int id, String nome, String url, Integer idCidade, Integer idGenero) {
         this.id = id;
         this.nome = nome;
         this.url = url;
-        this.uf = uf;
+        this.idCidade = idCidade;
+        this.idGenero = idGenero;
     }
 
     public Integer getId() {
@@ -30,10 +35,6 @@ public class Radio {
     }
 
     public String getUrl() {
-        return url;
-    }
-
-    public String getUf() {
         return url;
     }
 
@@ -49,8 +50,20 @@ public class Radio {
         this.url = url;
     }
 
-    public void setUf(String uf) {
-        this.uf = uf;
+    public Integer getIdCidade() {
+        return idCidade;
+    }
+
+    public void setIdCidade(Integer idCidade) {
+        this.idCidade = idCidade;
+    }
+
+    public Integer getIdGenero() {
+        return idGenero;
+    }
+
+    public void setIdGenero(Integer idGenero) {
+        this.idGenero = idGenero;
     }
 
     @Override
