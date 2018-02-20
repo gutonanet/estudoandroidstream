@@ -16,14 +16,17 @@ public class Radio {
 
     private Integer idGenero;
 
+    private Integer favorito;
 
 
-    public Radio(int id, String nome, String url, Integer idCidade, Integer idGenero) {
+
+    public Radio(int id, String nome, String url, Integer idCidade, Integer idGenero, Integer favorito) {
         this.id = id;
         this.nome = nome;
         this.url = url;
         this.idCidade = idCidade;
         this.idGenero = idGenero;
+        this.favorito = favorito;
     }
 
     public Integer getId() {
@@ -64,6 +67,14 @@ public class Radio {
 
     public void setIdGenero(Integer idGenero) {
         this.idGenero = idGenero;
+    }
+
+    public Integer getFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(Integer favorito) {
+        this.favorito = favorito;
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -69,6 +70,27 @@ public class FilterActivity  extends AppCompatActivity {
         String[] nomes = {};
         editNome = (AutoCompleteTextView) findViewById(R.id.editNome);
         editNome.addTextChangedListener(textChecker);
+
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+                Radio r = (Radio)parent.getAdapter().getItem(position);
+
+                Intent intent = new Intent(FilterActivity.this, DetailActivity.class);
+                Bundle extra = new Bundle();
+                extra.putInt("id",r.getId());
+                extra.putString("nome",r.getNome());
+                extra.putString("url",r.getUrl());
+                extra.putInt("favorito",r.getFavorito());
+                intent.putExtras(extra);
+                startActivity(intent);
+
+
+            }  });
+
 
 
     }

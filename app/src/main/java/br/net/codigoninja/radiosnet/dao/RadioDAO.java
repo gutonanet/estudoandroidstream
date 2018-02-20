@@ -43,25 +43,30 @@ public class RadioDAO {
         query += " INNER JOIN Generos g on (g.ID = r.ID_GENERO) ";
         String where = " where 1=1 ";
         List<String> argumentos = new ArrayList<>();
+        boolean semParametro = true;
         if(cidade!= null && !"".equals(cidade)){
 
             where += " AND c.NOME = ? AND c.UF = ? ";
             String[] dados = cidade.split("-");
             argumentos.add(dados[0].trim());
             argumentos.add(dados[1].trim());
+            semParametro = false;
         }
 
         if(genero!= null  && !"".equals(genero)){
 
             where += " AND g.NOME = ? ";
             argumentos.add(genero.trim());
+            semParametro = false;
         }
 
         if(nomeRadio != null && !"".equals(nomeRadio)){
             where += " AND r.NOME like ? ";
             argumentos.add("%"+nomeRadio.trim()+"%");
+            semParametro = false;
 
         }
+
         String[] args = null;
         if(!argumentos.isEmpty()){
             args = new String[argumentos.size()];
@@ -71,6 +76,9 @@ public class RadioDAO {
 
         }
 
+        if(semParametro){
+            where += " AND r.FAVORITO = 1 ";
+        }
         List<Radio> radios = new ArrayList<>();
         Cursor cursor = gw.getDatabase().rawQuery(query+where, args);
         while(cursor.moveToNext()){
@@ -79,8 +87,9 @@ public class RadioDAO {
             String url = cursor.getString(cursor.getColumnIndex("URL"));
             Integer idCidade = cursor.getInt(cursor.getColumnIndex("ID_CIDADE"));
             Integer idGereno = cursor.getInt(cursor.getColumnIndex("ID_GENERO"));
+            Integer favorito = cursor.getInt(cursor.getColumnIndex("FAVORITO"));
 
-            radios.add(new Radio(id, nome, url, idCidade, idGereno));
+            radios.add(new Radio(id, nome, url, idCidade, idGereno, favorito));
         }
         cursor.close();
         return radios;
@@ -98,16 +107,26 @@ public class RadioDAO {
     }
 
 
-    public boolean salvar(Integer id, String nome, String url, Integer idCidade, Integer idGenero){
+    public boolean salvar(Integer id, String nome, String url, Integer idCidade, Integer idGenero, Integer favorito){
         ContentValues cv = new ContentValues();
         cv.put("ID", id);
         cv.put("Nome", nome);
         cv.put("Url", url);
         cv.put("ID_CIDADE", idCidade);
         cv.put("ID_GENERO", idGenero);
+        cv.put("FAVORITO", favorito);
 
         return gw.getDatabase().insert(TABLE_RADIOS, null, cv) > 0;
     }
+
+    public boolean salvarFavorito(Integer id,  Integer favorito){
+        ContentValues cv = new ContentValues();
+        cv.put("ID", id);
+        cv.put("FAVORITO", favorito);
+
+        return gw.getDatabase().update(TABLE_RADIOS, cv,"ID=?", new String[]{ id + "" }) > 0;
+    }
+
 
 
   /*
@@ -129,7 +148,8 @@ public class RadioDAO {
                 String url = campos[2];
                 Integer idCidade = Integer.valueOf(campos[3]);
                 Integer idGenero = Integer.valueOf(campos[4]);
-                this.salvar(id,nome,url,idCidade, idGenero);
+                Integer favorito = Integer.valueOf(campos[5]);
+                this.salvar(id,nome,url,idCidade, idGenero, favorito);
             }
         }catch(Exception e ){
             e.printStackTrace();

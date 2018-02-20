@@ -64,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     Bundle extra = new Bundle();
+                    extra.putInt("id",r.getId());
                     extra.putString("nome",r.getNome());
                     extra.putString("url",r.getUrl());
+                    extra.putInt("favorito",r.getFavorito());
                     intent.putExtras(extra);
                     startActivity(intent);
 

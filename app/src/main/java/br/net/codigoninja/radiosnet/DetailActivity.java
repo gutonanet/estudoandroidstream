@@ -1,12 +1,18 @@
 package br.net.codigoninja.radiosnet;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import br.net.codigoninja.radiosnet.dao.RadioDAO;
 
 /**
  * Created by guton on 27/01/2018.
@@ -25,8 +31,48 @@ public class DetailActivity extends AppCompatActivity {
         mapeiaComponente();
         obtemExtras();
         iniciaRadio();
+
+        FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.fav);
+        myFab.setVisibility(inverte(extras.getInt("favorito")));
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                RadioDAO dao = new RadioDAO(getThis());
+                dao.salvarFavorito(extras.getInt("id"), 1);
+                String texto = "Radio adicionada aos favoritos.";
+                int duracao = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(getThis(), texto,duracao);
+                toast.show();
+            }
+        });
+
+        FloatingActionButton rem = (FloatingActionButton)  findViewById(R.id.rem);
+        rem.setVisibility(extras.getInt("favorito"));
+        rem.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                RadioDAO dao = new RadioDAO(getThis());
+                dao.salvarFavorito(extras.getInt("id"), 0);
+                String texto = "Radio removida dos favoritos.";
+                int duracao = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(getThis(), texto,duracao);
+                toast.show();
+            }
+        });
+
     }
 
+    public Integer inverte(Integer favorito){
+        if(favorito.equals(0)){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+    public Context getThis(){
+        return this;
+    }
 
     public void mapeiaComponente(){
         mTextView = (TextView)findViewById(R.id.id_text);
