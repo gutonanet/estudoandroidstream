@@ -34,10 +34,16 @@ public class MainActivity extends AppCompatActivity {
     private String nomeRadio;
     private  Bundle extras;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void onRestart()
+    {
+        super.onRestart();
+        onCreate();
+    }
+
+    protected void onCreate() {
+
         obtemExtras();
 
         ListView lista = (ListView) findViewById(R.id.lista);
@@ -60,19 +66,27 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
 
-                    Radio r = (Radio)parent.getAdapter().getItem(position);
+                Radio r = (Radio)parent.getAdapter().getItem(position);
 
-                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    Bundle extra = new Bundle();
-                    extra.putInt("id",r.getId());
-                    extra.putString("nome",r.getNome());
-                    extra.putString("url",r.getUrl());
-                    extra.putInt("favorito",r.getFavorito());
-                    intent.putExtras(extra);
-                    startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                Bundle extra = new Bundle();
+                extra.putInt("id",r.getId());
+                extra.putString("nome",r.getNome());
+                extra.putString("url",r.getUrl());
+                extra.putInt("favorito",r.getFavorito());
+                intent.putExtras(extra);
+                startActivity(intent);
 
 
             }  });
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        onCreate();
 
     }
 

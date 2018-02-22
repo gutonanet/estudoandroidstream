@@ -19,7 +19,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="80dp"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@android:drawable/btn_star_big_on"
+        android:background="@color/colorPrimaryDark"
+        android:tooltipText="Adicionar aos Favoritos"
         />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/rem"
@@ -29,7 +31,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="80dp"
-        android:src="@android:drawable/ic_input_delete"
+        android:src="@android:drawable/btn_star_big_off"
+        android:background="@color/colorPrimaryDark"
+        android:tooltipText="Remover dos Favoritos"
         />
 
 

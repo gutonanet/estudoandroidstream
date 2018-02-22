@@ -33,7 +33,13 @@ public class DetailActivity extends AppCompatActivity {
         iniciaRadio();
 
         FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.fav);
-        myFab.setVisibility(inverte(extras.getInt("favorito")));
+        int favorito = extras.getInt("favorito");
+        if(favorito == 0){
+            myFab.setVisibility(View.VISIBLE);
+        }else{
+            myFab.setVisibility(View.INVISIBLE);
+        }
+
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 RadioDAO dao = new RadioDAO(getThis());
@@ -47,7 +53,12 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         FloatingActionButton rem = (FloatingActionButton)  findViewById(R.id.rem);
-        rem.setVisibility(extras.getInt("favorito"));
+        if(favorito == 1){
+            rem.setVisibility(View.VISIBLE);
+        }else{
+            rem.setVisibility(View.INVISIBLE);
+        }
+
         rem.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 RadioDAO dao = new RadioDAO(getThis());
