@@ -1,1 +1,5 @@
 https://www.devmedia.com.br/criando-um-crud-com-android-studio-e-sqlite/32815
+
+http://mobilesiri.com/json-parsing-in-android-using-android-studio/
+
+https://stackoverflow.com/questions/33229869/get-json-data-from-url-using-android
