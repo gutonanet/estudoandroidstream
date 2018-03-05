@@ -27,7 +27,7 @@ public class GeneroDAO {
 
     public String[] retornoNomes(){
         List<Genero> lista = retornarTodos();
-        String[] nomes = new String[1];
+        String[] nomes = new String[lista.size()];
         int i = 0;
         for(Genero genero:lista){
             String nome = genero.getNome();

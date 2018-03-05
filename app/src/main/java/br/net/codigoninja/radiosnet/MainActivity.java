@@ -34,6 +34,8 @@ import java.util.List;
 import br.net.codigoninja.radiosnet.dao.CidadeDAO;
 import br.net.codigoninja.radiosnet.dao.GeneroDAO;
 import br.net.codigoninja.radiosnet.dao.RadioDAO;
+import br.net.codigoninja.radiosnet.dto.FactoryJson;
+import br.net.codigoninja.radiosnet.dto.Genero;
 import br.net.codigoninja.radiosnet.dto.Radio;
 
 
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         obtemExtras();
 
+        txtJson = new TextView(MainActivity.this);
+
         ListView lista = (ListView) findViewById(R.id.lista);
 
         FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.myFAB);
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnAtualizar = (Button)  findViewById(R.id.btnAtualizar);
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new JsonTask().execute("Url address here");
+                new JsonTask().execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findGeneros/2018-03-04");
             }
         });
 
@@ -161,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
             HttpURLConnection connection = null;
             BufferedReader reader = null;
+            StringBuffer buffer = new StringBuffer();
 
             try {
                 URL url = new URL(params[0]);
@@ -172,16 +177,15 @@ public class MainActivity extends AppCompatActivity {
 
                 reader = new BufferedReader(new InputStreamReader(stream));
 
-                StringBuffer buffer = new StringBuffer();
+
                 String line = "";
 
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line+"\n");
                     Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-
                 }
 
-                return buffer.toString();
+
 
 
             } catch (MalformedURLException e) {
@@ -200,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return buffer.toString();
         }
 
         @Override
@@ -209,7 +213,11 @@ public class MainActivity extends AppCompatActivity {
             if (pd.isShowing()){
                 pd.dismiss();
             }
-            txtJson.setText(result);
+            Genero g = FactoryJson.parsinJson(result);
+            if(g != null){
+                GeneroDAO dao = new GeneroDAO(MainActivity.this);
+                dao.salvar(g.getId(),g.getNome());
+            }
         }
     }
 

@@ -27,7 +27,7 @@ public class CidadeDAO {
 
     public String[] retornoNomes(){
         List<Cidade> lista = retornarTodos();
-        String[] nomes = new String[1];
+        String[] nomes = new String[lista.size()];
         int i = 0;
         for(Cidade cidade:lista){
             String nome = cidade.getNomeApresentacao();
