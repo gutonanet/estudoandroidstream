@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.net.codigoninja.radiosnet.dao.CidadeDAO;
+import br.net.codigoninja.radiosnet.dao.ControleDAO;
 import br.net.codigoninja.radiosnet.dao.GeneroDAO;
 import br.net.codigoninja.radiosnet.dao.RadioDAO;
 import br.net.codigoninja.radiosnet.dto.FactoryJson;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private  Bundle extras;
     private TextView txtJson;
     private ProgressDialog pd;
+    private String tipoAcesso;
+
 
 
     @Override
@@ -74,7 +77,12 @@ public class MainActivity extends AppCompatActivity {
         Button btnAtualizar = (Button)  findViewById(R.id.btnAtualizar);
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new JsonTask().execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findGeneros/2018-03-04");
+                ControleDAO d = new ControleDAO(MainActivity.this);
+                String data = d.retornaDataControle();
+                JsonTask j = new JsonTask();
+                j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findGeneros/"+data,"G");
+                j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findCidades/"+data,"C");
+                j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findRadios/"+data,"R");
             }
         });
 
@@ -158,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
             pd.setMessage("Please wait");
             pd.setCancelable(false);
             pd.show();
+
         }
 
         protected String doInBackground(String... params) {
@@ -169,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 URL url = new URL(params[0]);
+                tipoAcesso = params[1];
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
@@ -213,10 +223,12 @@ public class MainActivity extends AppCompatActivity {
             if (pd.isShowing()){
                 pd.dismiss();
             }
-            Genero g = FactoryJson.parsinJson(result);
-            if(g != null){
-                GeneroDAO dao = new GeneroDAO(MainActivity.this);
-                dao.salvar(g.getId(),g.getNome());
+            if(tipoAcesso.equals("G")) {
+                Genero g = FactoryJson.parsinJson(result);
+                if (g != null) {
+                    GeneroDAO dao = new GeneroDAO(MainActivity.this);
+                    dao.salvar(g.getId(), g.getNome());
+                }
             }
         }
     }

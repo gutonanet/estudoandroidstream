@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class FactoryJson {
 
-    public static Genero parsinJson(String result){
+    public static Genero parsingGenero(String result){
         try {
             JSONArray jsonObject = new JSONArray(result.toString());
             JSONObject obj = jsonObject.getJSONObject(0);
@@ -22,5 +22,21 @@ public class FactoryJson {
         }
 
     }
+    public static Cidade parsingCidade(String result){
+        try {
+            JSONArray jsonObject = new JSONArray(result.toString());
+            JSONObject obj = jsonObject.getJSONObject(0);
+            Integer id = obj.getInt("id");
+            String nome = obj.getString("nome");
+            String uf = obj.getString("uf");
+
+            return new Cidade(id, nome,uf);
+        }catch(Exception e){
+            return null;
+
+        }
+
+    }
+
 
 }

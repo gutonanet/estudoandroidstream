@@ -9,11 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 5;
-    private static final String DATABASE_NAME = "bancoApp";
-    private final String CREATE_TABLE_CIDADES = "CREATE TABLE Cidades (ID INTEGER PRIMARY KEY, UF TEXT NOT NULL, NOME TEXT NOT NULL);";
-    private final String CREATE_TABLE_GENEROS = "CREATE TABLE Generos (ID INTEGER PRIMARY KEY, NOME TEXT NOT NULL);";
-    private final String CREATE_TABLE_RADIOS = "CREATE TABLE Radios (ID INTEGER PRIMARY KEY, NOME TEXT NOT NULL, URL TEXT, ID_GENERO INTEGER NOT NULL, ID_CIDADE INTEGER NOT NULL, FAVORITO INTEGER);";
+    private static final int DATABASE_VERSION = 6;
+    private static final String DATABASE_NAME  = "bancoApp";
+    private final String CREATE_TABLE_CIDADES  = "CREATE TABLE Cidades (ID INTEGER PRIMARY KEY, UF TEXT NOT NULL, NOME TEXT NOT NULL);";
+    private final String CREATE_TABLE_GENEROS  = "CREATE TABLE Generos (ID INTEGER PRIMARY KEY, NOME TEXT NOT NULL);";
+    private final String CREATE_TABLE_RADIOS   = "CREATE TABLE Radios (ID INTEGER PRIMARY KEY, NOME TEXT NOT NULL, URL TEXT, ID_GENERO INTEGER NOT NULL, ID_CIDADE INTEGER NOT NULL, FAVORITO INTEGER);";
+    private final String CREATE_TABLE_CONTROLE = "CREATE TABLE Controle (ID INTEGER PRIMARY KEY, DATA TEXT NOT NULL);";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -25,6 +26,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CIDADES);
         db.execSQL(CREATE_TABLE_GENEROS);
         db.execSQL(CREATE_TABLE_RADIOS);
+        db.execSQL(CREATE_TABLE_CONTROLE);
     }
 
     @Override
@@ -32,6 +34,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Radios");
         db.execSQL("DROP TABLE IF EXISTS Cidades");
         db.execSQL("DROP TABLE IF EXISTS Generos");
+        db.execSQL("DROP TABLE IF EXISTS Controle");
         onCreate(db);
     }
 }

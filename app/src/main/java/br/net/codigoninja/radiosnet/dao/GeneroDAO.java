@@ -73,14 +73,7 @@ public class GeneroDAO {
     }
 
 
-  /*
-        return new ArrayList<>(Arrays.asList(
-                new Radio(1,"Radio Mix FM SP", "http://tuneinmix.crossradio.com.br:8008/stream?type=http&amp;nocache=74659","SP"),
-                new Radio(2,"Jovem Pan FM - 100.9 FM", "http://17483.live.streamtheworld.com:3690/JP_SP_FM_SC", "SP"),
-                new Radio(3,"Top FM - 104.1", "http://18703.live.streamtheworld.com/TUPIFMAAC_SC", "SP")));
-                */
-
-    private void populaTabela(Context cx){
+     private void populaTabela(Context cx){
         BufferedReader br  = null;
         try {
 
