@@ -35,6 +35,7 @@ import br.net.codigoninja.radiosnet.dao.CidadeDAO;
 import br.net.codigoninja.radiosnet.dao.ControleDAO;
 import br.net.codigoninja.radiosnet.dao.GeneroDAO;
 import br.net.codigoninja.radiosnet.dao.RadioDAO;
+import br.net.codigoninja.radiosnet.dto.Cidade;
 import br.net.codigoninja.radiosnet.dto.FactoryJson;
 import br.net.codigoninja.radiosnet.dto.Genero;
 import br.net.codigoninja.radiosnet.dto.Radio;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private String nomeRadio;
     private  Bundle extras;
     private TextView txtJson;
-    private ProgressDialog pd;
+
     private String tipoAcesso;
 
 
@@ -79,10 +80,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ControleDAO d = new ControleDAO(MainActivity.this);
                 String data = d.retornaDataControle();
-                JsonTask j = new JsonTask();
-                j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findGeneros/"+data,"G");
-                j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findCidades/"+data,"C");
-                j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findRadios/"+data,"R");
+                JsonTask j1 = new JsonTask();
+                j1.execute("http://192.168.0.8:8080/RadiosProject/rest/appService/findGeneros/"+data,"G");
+
+                JsonTask j2 = new JsonTask();
+                j2.execute("http://192.168.0.8:8080/RadiosProject/rest/appService/findCidades/"+data,"C");
+               // j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findRadios/"+data,"R");
             }
         });
 
@@ -153,20 +156,24 @@ public class MainActivity extends AppCompatActivity {
         generoDAO.carregaDados(this);
         RadioDAO dao = new RadioDAO(this);
         dao.carregaDados(this);
+        ControleDAO controleDAO = new ControleDAO(this);
+        controleDAO.carregaDados(this);
     }
 
 
     //Botão que irá atualizar as radios pela internet
     private class JsonTask extends AsyncTask<String, String, String> {
+        private ProgressDialog pd;
 
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
-
+            if(pd == null) {
+                pd = new ProgressDialog(MainActivity.this);
+                pd.setMessage("Aguarde");
+                pd.setCancelable(false);
+                pd.show();
+            }
         }
 
         protected String doInBackground(String... params) {
@@ -220,15 +227,27 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (pd.isShowing()){
-                pd.dismiss();
-            }
+
             if(tipoAcesso.equals("G")) {
-                Genero g = FactoryJson.parsinJson(result);
+
+                Genero g = FactoryJson.parsingGenero(result);
                 if (g != null) {
                     GeneroDAO dao = new GeneroDAO(MainActivity.this);
                     dao.salvar(g.getId(), g.getNome());
                 }
+
+            }
+            if(tipoAcesso.equals("C")) {
+
+                Cidade c = FactoryJson.parsingCidade(result);
+                if (c != null) {
+                    CidadeDAO dao = new CidadeDAO(MainActivity.this);
+                    dao.salvar(c.getId(), c.getNome(), c.getUf());
+                }
+
+            }
+            if (pd.isShowing()){
+                pd.dismiss();
             }
         }
     }

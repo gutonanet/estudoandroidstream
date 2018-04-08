@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME  = "bancoApp";
     private final String CREATE_TABLE_CIDADES  = "CREATE TABLE Cidades (ID INTEGER PRIMARY KEY, UF TEXT NOT NULL, NOME TEXT NOT NULL);";
     private final String CREATE_TABLE_GENEROS  = "CREATE TABLE Generos (ID INTEGER PRIMARY KEY, NOME TEXT NOT NULL);";
