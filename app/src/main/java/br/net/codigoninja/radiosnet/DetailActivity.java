@@ -22,7 +22,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private TextView mTextView;
     private  Bundle extras;
-    private MediaPlayer mediaPlayer;
+    private static MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +113,7 @@ public class DetailActivity extends AppCompatActivity {
                 mediaPlayer = new MediaPlayer();
             }else{
                 mediaPlayer.stop();
+                mediaPlayer.reset();
             }
 
 

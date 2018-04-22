@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         List<Radio> radios = todosAsRadios();
-        ArrayAdapter<Radio> adapter = new ArrayAdapter<Radio>(this, android.R.layout.simple_list_item_1, radios);
+        ArrayAdapter<Radio> adapter = new ArrayAdapter<Radio>(this, android.R.layout.simple_expandable_list_item_1, radios);
         lista.setAdapter(adapter);
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
