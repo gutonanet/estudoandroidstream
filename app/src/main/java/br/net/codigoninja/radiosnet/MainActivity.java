@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import br.net.codigoninja.radiosnet.adapter.AdapterImage;
 import br.net.codigoninja.radiosnet.dao.CidadeDAO;
 import br.net.codigoninja.radiosnet.dao.ControleDAO;
 import br.net.codigoninja.radiosnet.dao.GeneroDAO;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         List<Radio> radios = todosAsRadios();
-        ArrayAdapter<Radio> adapter = new ArrayAdapter<Radio>(this, android.R.layout.simple_expandable_list_item_1, radios);
+        AdapterImage adapter = new AdapterImage(radios,this);
         lista.setAdapter(adapter);
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
