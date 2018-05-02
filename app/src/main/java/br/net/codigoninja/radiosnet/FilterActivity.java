@@ -32,7 +32,7 @@ public class FilterActivity  extends AppCompatActivity {
 
     AutoCompleteTextView editGenero;
 
-    AutoCompleteTextView editNome;
+    EditText editNome;
 
     ListView lista;
     @Override
@@ -68,7 +68,7 @@ public class FilterActivity  extends AppCompatActivity {
 
         //Nome Radio
         String[] nomes = {};
-        editNome = (AutoCompleteTextView) findViewById(R.id.editNome);
+        editNome = (EditText) findViewById(R.id.editNome);
         editNome.addTextChangedListener(textChecker);
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
