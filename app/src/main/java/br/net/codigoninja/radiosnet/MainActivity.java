@@ -42,7 +42,7 @@ import br.net.codigoninja.radiosnet.dto.Genero;
 import br.net.codigoninja.radiosnet.dto.Radio;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MenuActivity{
 
     private String cidade;
     private String genero;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private  Bundle extras;
     private TextView txtJson;
 
-    private String tipoAcesso;
+
 
 
 
@@ -72,21 +72,13 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.myFAB);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FilterActivity.class);
-                startActivity(intent);
+                pesquisar();
             }
         });
         Button btnAtualizar = (Button)  findViewById(R.id.btnAtualizar);
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ControleDAO d = new ControleDAO(MainActivity.this);
-                String data = d.retornaDataControle();
-                JsonTask j1 = new JsonTask();
-                j1.execute("http://192.168.0.8:8080/RadiosProject/rest/appService/findGeneros/"+data,"G");
-
-                JsonTask j2 = new JsonTask();
-                j2.execute("http://192.168.0.8:8080/RadiosProject/rest/appService/findCidades/"+data,"C");
-               // j.execute("http://192.168.0.14:8080/RadiosProject/rest/appService/findRadios/"+data,"R");
+                executarAtualizar();
             }
         });
 
@@ -162,96 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //Botão que irá atualizar as radios pela internet
-    private class JsonTask extends AsyncTask<String, String, String> {
-        private ProgressDialog pd;
 
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            if(pd == null) {
-                pd = new ProgressDialog(MainActivity.this);
-                pd.setMessage("Aguarde");
-                pd.setCancelable(false);
-                pd.show();
-            }
-        }
-
-        protected String doInBackground(String... params) {
-
-
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-            StringBuffer buffer = new StringBuffer();
-
-            try {
-                URL url = new URL(params[0]);
-                tipoAcesso = params[1];
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line+"\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-                }
-
-
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return buffer.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            if(tipoAcesso.equals("G")) {
-
-                Genero g = FactoryJson.parsingGenero(result);
-                if (g != null) {
-                    GeneroDAO dao = new GeneroDAO(MainActivity.this);
-                    dao.salvar(g.getId(), g.getNome());
-                }
-
-            }
-            if(tipoAcesso.equals("C")) {
-
-                Cidade c = FactoryJson.parsingCidade(result);
-                if (c != null) {
-                    CidadeDAO dao = new CidadeDAO(MainActivity.this);
-                    dao.salvar(c.getId(), c.getNome(), c.getUf());
-                }
-
-            }
-            if (pd.isShowing()){
-                pd.dismiss();
-            }
-        }
-    }
 
 }
 

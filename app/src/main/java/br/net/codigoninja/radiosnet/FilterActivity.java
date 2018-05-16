@@ -26,7 +26,7 @@ import br.net.codigoninja.radiosnet.dto.Radio;
  * Created by guton on 13/02/2018.
  */
 
-public class FilterActivity  extends AppCompatActivity {
+public class FilterActivity  extends MenuActivity{
 
     AutoCompleteTextView editCidade;
 
