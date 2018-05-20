@@ -1,25 +1,18 @@
 package br.net.codigoninja.radiosnet;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.URI;
-import java.net.URL;
-import java.util.HashMap;
-
 import br.net.codigoninja.radiosnet.dao.RadioDAO;
+import wseemann.media.FFmpegMediaPlayer;
 
 /**
  * Created by guton on 27/01/2018.
@@ -29,7 +22,7 @@ public class DetailActivity extends MenuActivity{
 
     private TextView mTextView;
     private  Bundle extras;
-    private static MediaPlayer mediaPlayer;
+    private static FFmpegMediaPlayer mediaPlayer;
     private ProgressDialog pd;
     public static String URL_RADIO;
 
@@ -121,14 +114,16 @@ public class DetailActivity extends MenuActivity{
             //String url = "http://........"; // your URL here
 
             if(mediaPlayer == null){
-                mediaPlayer = new MediaPlayer();
+                mediaPlayer = new FFmpegMediaPlayer();
             }else{
 
                 if(mediaPlayer.isPlaying()) {
                     mediaPlayer.stop();
+                    mediaPlayer = new FFmpegMediaPlayer();
+
                 }
 
-                mediaPlayer.reset();
+                //mediaPlayer.reset();
             }
             if(pd == null) {
                 pd = new ProgressDialog(DetailActivity.this);
@@ -153,9 +148,9 @@ public class DetailActivity extends MenuActivity{
             mediaPlayer.setDataSource(url);
             mediaPlayer.setLooping(true);
             mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            mediaPlayer.setOnPreparedListener(new FFmpegMediaPlayer.OnPreparedListener(){
                 @Override
-                public void onPrepared(MediaPlayer mp) {
+                public void onPrepared(FFmpegMediaPlayer mp) {
                     mediaPlayer.start();
                     if (pd.isShowing()){
                         pd.dismiss();
