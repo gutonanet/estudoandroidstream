@@ -24,9 +24,13 @@ public class RadioDAO {
         gw = DbGateway.getInstance(ctx);
       }
 
-
     public String[] retornaNomes(String cidade, String genero, String nomeRadio){
-        List<Radio> lista = retornarDados(cidade,genero,nomeRadio);
+        return retornaNomes(cidade, genero, nomeRadio, true);
+    }
+
+
+    public String[] retornaNomes(String cidade, String genero, String nomeRadio, boolean consultaFavoritos){
+        List<Radio> lista = retornarDados(cidade,genero,nomeRadio, consultaFavoritos);
         String[] radios = new String[lista.size()];
         int i = 0;
         for(Radio r:lista){
@@ -38,6 +42,10 @@ public class RadioDAO {
 
 
     public List<Radio> retornarDados(String cidade, String genero, String nomeRadio){
+        return retornarDados(cidade, genero, nomeRadio, true);
+    }
+
+    public List<Radio> retornarDados(String cidade, String genero, String nomeRadio, boolean consultaFavoritos){
         String query = " SELECT r.* FROM Radios r ";
         query += " INNER JOIN Cidades c on (c.ID = r.ID_CIDADE) ";
         query += " INNER JOIN Generos g on (g.ID = r.ID_GENERO) ";
@@ -77,7 +85,12 @@ public class RadioDAO {
         }
 
         if(semParametro){
-            where += " AND r.FAVORITO = 1 ";
+            if(consultaFavoritos){
+                where += " AND r.FAVORITO = 1 ";
+            }else{
+                return new ArrayList<>();
+            }
+
         }
         List<Radio> radios = new ArrayList<>();
         Cursor cursor = gw.getDatabase().rawQuery(query+where, args);

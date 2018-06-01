@@ -11,6 +11,13 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".SplashActivity">
             android:theme="@style/AppCompat.TelaCheia">
@@ -28,3 +35,4 @@
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
    </manifest>
+

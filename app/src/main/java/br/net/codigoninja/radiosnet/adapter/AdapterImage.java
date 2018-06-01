@@ -21,6 +21,7 @@ public class AdapterImage extends BaseAdapter {
     private final List<Radio> radios;
     private final Activity act;
 
+
     public AdapterImage(List<Radio> radios, Activity act){
         this.radios = radios;
         this.act = act;

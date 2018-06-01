@@ -85,9 +85,9 @@ public class DetailActivity extends MenuActivity{
         }
     }
 
-    public Context getThis(){
-        return this;
-    }
+    //public Context getThis(){
+    //    return this;
+    //}
 
     public void mapeiaComponente(){
         mTextView = (TextView)findViewById(R.id.id_text);
