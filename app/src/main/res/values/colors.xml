@@ -6,4 +6,8 @@
 
     <color name="colorBlack">#000000</color>
     <color name="colorDivider">#B6B6B6</color>
+
+    <color name="NoTransparent">#FF99CC00</color>
+    <color name="AlmostTransparent">#4499CC00</color>
+    <color name="FullTransparent">#0099CC00</color>
 </resources>

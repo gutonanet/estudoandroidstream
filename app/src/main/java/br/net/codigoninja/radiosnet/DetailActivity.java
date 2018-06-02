@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.net.codigoninja.radiosnet.controller.RadioController;
 import br.net.codigoninja.radiosnet.dao.RadioDAO;
 import wseemann.media.FFmpegMediaPlayer;
 
@@ -18,7 +20,7 @@ import wseemann.media.FFmpegMediaPlayer;
  * Created by guton on 27/01/2018.
  */
 
-public class DetailActivity extends MenuActivity{
+public class DetailActivity extends MenuActivity implements MediaController.MediaPlayerControl{
 
     private TextView mTextView;
     private  Bundle extras;
@@ -28,6 +30,34 @@ public class DetailActivity extends MenuActivity{
 
     private TextView mtextViewTitle;
 
+    private RadioController controller;
+
+    private void setController(){
+        controller = new RadioController(this);
+        controller.setPrevNextListeners(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //playNext();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //playPrev();
+            }
+        });
+
+        controller.setMediaPlayer(this);
+        controller.setAnchorView(findViewById(R.id.detalhe));
+        controller.setEnabled(true);
+        controller.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+
+
+
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +65,8 @@ public class DetailActivity extends MenuActivity{
         mapeiaComponente();
         obtemExtras();
         iniciaRadio();
+        setController();
+
 
         FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.fav);
         int favorito = extras.getInt("favorito");
@@ -152,6 +184,7 @@ public class DetailActivity extends MenuActivity{
                 @Override
                 public void onPrepared(FFmpegMediaPlayer mp) {
                     mediaPlayer.start();
+                    controller.show(0);
                     if (pd.isShowing()){
                         pd.dismiss();
                     }
@@ -201,4 +234,58 @@ public class DetailActivity extends MenuActivity{
     }
 
 
+    @Override
+    public void start() {
+        mediaPlayer.start();
+    }
+
+    @Override
+    public void pause() {
+        mediaPlayer.pause();
+    }
+
+    @Override
+    public int getDuration() {
+        return mediaPlayer.getDuration();
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mediaPlayer.getCurrentPosition();
+    }
+
+    @Override
+    public void seekTo(int i) {
+        mediaPlayer.seekTo(i);
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return mediaPlayer.isPlaying();
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return 0;
+    }
+
+    @Override
+    public boolean canPause() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return false;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return false;
+    }
+
+    @Override
+    public int getAudioSessionId() {
+        return mediaPlayer.getAudioSessionId();
+    }
 }
